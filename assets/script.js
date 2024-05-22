@@ -25,13 +25,11 @@ $(document).ready(function () {
       timeBlock.append(hourLabel, textArea, saveButton);
       container.append(timeBlock);
 
-      // Load saved events from local storage
       const savedEvent = localStorage.getItem(`event-${hour.hour}`);
       if (savedEvent) {
           textArea.val(savedEvent);
       }
 
-      // Color code the time blocks
       const currentHour = dayjs().hour();
       if (hour.hour < currentHour) {
           textArea.addClass("past");
@@ -42,7 +40,6 @@ $(document).ready(function () {
       }
   });
 
-  // Save event to local storage
   $(".saveBtn").on("click", function () {
       const hour = $(this).siblings("textarea").attr("data-hour");
       const event = $(this).siblings("textarea").val();
