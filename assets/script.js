@@ -1,23 +1,51 @@
-// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// the code isn't run until the browser has finished rendering all the elements
-// in the html.
-$(function () {
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
-  //
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
-  //
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-  //
-  // TODO: Add code to display the current date in the header of the page.
+$(document).ready(function () {
+  const workHours = [
+      { hour: 9, display: "9AM" },
+      { hour: 10, display: "10AM" },
+      { hour: 11, display: "11AM" },
+      { hour: 12, display: "12PM" },
+      { hour: 13, display: "1PM" },
+      { hour: 14, display: "2PM" },
+      { hour: 15, display: "3PM" },
+      { hour: 16, display: "4PM" },
+      { hour: 17, display: "5PM" }
+  ];
+
+  const currentDay = $("#currentDay");
+  currentDay.text(dayjs().format('dddd, MMMM D'));
+
+  const container = $(".container");
+
+  workHours.forEach(hour => {
+      const timeBlock = $('<div class="time-block">').attr('id', `hour-${hour.hour}`);
+      const hourLabel = $('<div class="hour">').text(hour.display);
+      const textArea = $('<textarea>').attr('data-hour', hour.hour);
+      const saveButton = $('<button class="saveBtn">').text('Save');
+
+      timeBlock.append(hourLabel, textArea, saveButton);
+      container.append(timeBlock);
+
+      // Load saved events from local storage
+      const savedEvent = localStorage.getItem(`event-${hour.hour}`);
+      if (savedEvent) {
+          textArea.val(savedEvent);
+      }
+
+      // Color code the time blocks
+      const currentHour = dayjs().hour();
+      if (hour.hour < currentHour) {
+          textArea.addClass("past");
+      } else if (hour.hour === currentHour) {
+          textArea.addClass("present");
+      } else {
+          textArea.addClass("future");
+      }
+  });
+
+  // Save event to local storage
+  $(".saveBtn").on("click", function () {
+      const hour = $(this).siblings("textarea").attr("data-hour");
+      const event = $(this).siblings("textarea").val();
+      localStorage.setItem(`event-${hour}`, event);
+  });
 });
