@@ -14,7 +14,7 @@ $(document).ready(function () {
   const currentDay = $("#currentDay");
   currentDay.text(dayjs().format('dddd, MMMM D'));
 
-  const container = $(".container");
+  const cont = $(".container");
 
   workHours.forEach(hour => {
       const timeBlock = $('<div class="time-block">').attr('id', `hour-${hour.hour}`);
@@ -23,7 +23,7 @@ $(document).ready(function () {
       const saveButton = $('<button class="saveBtn">').text('Save');
 
       timeBlock.append(hourLabel, textArea, saveButton);
-      container.append(timeBlock);
+      cont.append(timeBlock);
 
       const savedEvent = localStorage.getItem(`event-${hour.hour}`);
       if (savedEvent) {
